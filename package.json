@@ -1,6 +1,6 @@
 {
 	"name": "nspin-bun",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Lightweight and efficient spinner package optimized exclusively for Bun (ESM-only)",
 	"keywords": [
 		"cli",
