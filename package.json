@@ -1,0 +1,118 @@
+{
+	"name": "nspin-bun",
+	"version": "0.1.0",
+	"description": "Lightweight and efficient spinner package optimized exclusively for Bun (ESM-only)",
+	"keywords": [
+		"cli",
+		"spinner",
+		"esm",
+		"bun",
+		"nspin"
+	],
+	"author": {
+		"name": "Manuel Gil",
+		"email": "support@imgil.dev",
+		"url": "https://imgil.dev/"
+	},
+	"sponsor": {
+		"url": "https://github.com/sponsors/ManuelGil"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/ManuelGil/nspin-bun",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ManuelGil/nspin-bun.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ManuelGil/nspin-bun/issues"
+	},
+	"engines": {
+		"bun": ">=0.6.0",
+		"node": ">=22.0.0"
+	},
+	"peerDependencies": {
+		"bun": ">=0.6.0"
+	},
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"sideEffects": false,
+	"files": [
+		"dist",
+		"CHANGELOG.md",
+		"README.md",
+		"!dist/**/*.map"
+	],
+	"scripts": {
+		"clean": "rm -rf dist",
+		"build": "bun build src/index.ts --outdir=dist --minify --target=node",
+		"build:prod": "NODE_ENV=production bun build src/index.ts --outdir=dist --minify --target=node",
+		"compress": "brotli -f -o dist/index.js.br dist/index.js",
+		"postbuild": "npm run compress && du -sh dist",
+		"pretest": "npm run clean && npm run build",
+		"test": "bun test",
+		"test:legacy": "vitest run",
+		"start": "bun run dist/index.js",
+		"prepublishOnly": "npm run build:prod && npm run postbuild",
+		"publish:local": "npm publish --registry http://localhost:4873",
+		"publish:public": "npm publish --access=public",
+		"prepare": "husky",
+		"release": "release-it",
+		"format": "biome format --write",
+		"lint": "biome lint --write",
+		"lint:check": "biome check --write",
+		"ts-check": "tsc --noEmit",
+		"check-format": "prettier --check .",
+		"check-exports": "attw --pack .",
+		"link": "cd dist && npm link",
+		"audit": "npm audit",
+		"validate": "npm run lint:check && npm run test && npm run audit",
+		"ci": "npm run clean && npm run build && npm run validate"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.17.4",
+		"@biomejs/biome": "1.9.4",
+		"@commitlint/cli": "^19.8.0",
+		"@commitlint/config-conventional": "^19.8.0",
+		"@release-it/conventional-changelog": "^10.0.0",
+		"@release-it/keep-a-changelog": "^6.0.0",
+		"@types/node": "^22.13.10",
+		"bun-types": "^1.2.5",
+		"globals": "^16.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.4.3",
+		"release-it": "^18.1.2",
+		"typescript": "^5.8.2"
+	},
+	"lint-staged": {
+		"*.ts": [
+			"biome format --write",
+			"biome lint --write"
+		]
+	},
+	"release-it": {
+		"git": {
+			"commitMessage": "chore: :bookmark: release ${version}"
+		},
+		"github": {
+			"release": true
+		},
+		"npm": {
+			"publish": false
+		},
+		"plugins": {
+			"@release-it/keep-a-changelog": {
+				"filename": "CHANGELOG.md"
+			}
+		}
+	}
+}
