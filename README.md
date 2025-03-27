@@ -7,7 +7,7 @@
 
 ## Overview
 
-**nspin-bun** is a lightweight, efficient spinner package optimized exclusively for Bun. Inspired by [nspin](https://github.com/ManuelGil/nspin), this ESM-only library leverages modern Node.js APIs (such as `styleText` and `performance.now()`) along with Bun’s native capabilities to deliver a fast, minimal CLI spinner with zero external dependencies. Perfect for modern Bun environments, **nspin-bun** is engineered for high performance and an ultra-small footprint.
+**nspin-bun** is a lightweight, dependency-free spinner package engineered exclusively for Bun environments. Inspired by **nspin**, it leverages modern Node.js APIs (like `styleText` and `performance.now()`) along with Bun's native capabilities to deliver an ultra-fast and minimal CLI spinner experience—all without external dependencies.
 
 ![nspin-bun](https://raw.githubusercontent.com/ManuelGil/nspin-bun/main/assets/nspin-bun.gif)
 
@@ -24,7 +24,9 @@
     - [Example 1: Progressive Status Updates](#example-1-progressive-status-updates)
     - [Example 2: Chained Spinner Actions](#example-2-chained-spinner-actions)
     - [Example 3: Concurrent Spinners](#example-3-concurrent-spinners)
-    - [Example 4: Fallback in Non-TTY Environments](#example-4-fallback-in-non-tty-environments)
+    - [Example 4: Dynamic Update of Spinner Frames](#example-4-dynamic-update-of-spinner-frames)
+    - [Example 5: Configuring Spinner Position](#example-5-configuring-spinner-position)
+    - [Example 6: Degraded Output in Non-TTY Environments](#example-6-degraded-output-in-non-tty-environments)
   - [API Reference](#api-reference)
     - [Spinner Class](#spinner-class)
   - [Build \& Publication](#build--publication)
@@ -39,60 +41,71 @@
 ## Why Choose nspin-bun?
 
 - **Optimized for Bun:**
-  Designed exclusively for Bun with native ESM support, ensuring blazing-fast build and test speeds and a very small bundle size.
+  Exclusively designed for Bun, ensuring blazing-fast build and test speeds with an ultra-small footprint.
 
-- **Inspired by nspin:**
-  Refines the approach of the original nspin to deliver a modern, minimal spinner solution with a chainable API.
+- **Modern & Native:**
+  Leverages modern Node.js APIs (such as `styleText` from `node:util` and `performance.now()`) to provide a reliable, dependency-free experience.
 
-- **Zero External Dependencies:**
-  Relies solely on Node.js built-in APIs (e.g., `styleText` from `node:util`, `performance.now()` from `perf_hooks`) for styling and timing, reducing bloat and potential security risks.
+- **Zero Dependencies:**
+  Avoids the bloat of external libraries, resulting in a lightweight package that minimizes security risks.
 
-- **Clean, Modular API:**
-  Built using SOLID principles, offering an intuitive, chainable API that makes managing multiple spinners simple and maintainable.
+- **Clean & Modular API:**
+  Built with SOLID principles, the chainable API simplifies spinner management and allows for multiple concurrent spinners.
 
 - **Adaptive Output:**
-  Automatically adjusts its behavior for TTY and non-TTY environments, ensuring clear output in any terminal.
+  Automatically adjusts for both TTY and non-TTY environments, ensuring a clear display regardless of the terminal capabilities.
+
+- **Dynamic Frame Updates:**
+  Update the spinner animation frames on the fly using the `updateFrames(newFrames: string[])` method.
+
+- **Configurable Positioning:**
+  Choose whether the spinner appears to the left (default) or right of the message via the `position` option.
 
 ## Requirements
 
-- **Node.js 22+** – Utilizes modern APIs like `styleText` and `performance.now()`.
-- **Bun (>= 0.6.0)** – Fully leverages Bun's native build, test, and runtime capabilities.
+- **Node.js 22+** – Required to access modern APIs like `styleText` and `performance.now()`.
+- **Bun (>= 0.6.0)** – Fully leverages Bun's native build, test, and runtime capabilities for an optimal experience.
 
 ## Features
 
 - **Lightweight & Efficient:**
-  Uses native Node.js features to deliver high performance with minimal overhead.
+  Uses native features to deliver high performance with minimal overhead.
 
 - **Native Styling:**
-  Employs `styleText` from `node:util` for elegant spinner styling without manual ANSI escape codes.
+  Utilizes `styleText` for elegant spinner styling without manual ANSI codes.
 
 - **Chainable API:**
-  Methods like `start`, `updateText`, and `stop` return the spinner instance, allowing a fluent coding experience.
+  Methods like `start`, `updateText`, `updateFrames`, and `stop` return the spinner instance for fluent chaining.
 
 - **Multiple Spinner Support:**
   Easily manage several spinners concurrently.
 
 - **Modular & Extensible:**
-  Adheres to SOLID principles for clean, maintainable code.
+  Designed following SOLID principles for clean, maintainable, and extendable code.
 
-- **Adaptive Output:**
-  Automatically adapts to TTY and non-TTY environments for optimal display.
+- **Dynamic Update of Frames:**
+  Change the spinner animation on the fly with `updateFrames(newFrames: string[])`.
+
+- **Position Configuration:**
+  Configure the spinner's placement relative to the message using the `position` option (`'left'` or `'right'`).
 
 ## Installation
 
-Install **nspin-bun** via npm:
+Since **nspin-bun** is built exclusively for Bun, install it using Bun's package manager:
 
 ```bash
-npm install nspin-bun
+bun add nspin-bun
 ```
+
+> Note: Although published on npm, **nspin-bun** is optimized for Bun environments.
 
 ## Usage Examples
 
-Below are several examples showcasing the functionality of **nspin-bun**.
+Below are several examples demonstrating the versatility of **nspin-bun**.
 
 ### Example 1: Progressive Status Updates
 
-This example demonstrates how to update the spinner's status continuously as a task progresses.
+Update the spinner's status continuously as a task progresses.
 
 ```typescript
 import { Spinner } from "nspin-bun";
@@ -118,7 +131,7 @@ const interval = setInterval(() => {
 
 ### Example 2: Chained Spinner Actions
 
-This example shows how to chain spinner methods to perform sequential actions.
+Chain methods to perform sequential spinner actions.
 
 ```typescript
 import { Spinner } from "nspin-bun";
@@ -127,62 +140,140 @@ const spinner = new Spinner({
   frames: ["◴", "◷", "◶", "◵"],
   interval: 100,
   format: ["cyan", "bold"]
-});
-
-spinner.start("Starting process...")
+}).start("Starting process...")
   .updateText("Loading data...")
   .stop("Process complete!");
 ```
 
 ### Example 3: Concurrent Spinners
 
-This example illustrates running multiple spinners concurrently to simulate parallel tasks.
+Run multiple spinners concurrently to simulate parallel tasks.
 
 ```typescript
 import { Spinner } from "nspin-bun";
 
-const spinner1 = new Spinner({
-  frames: ["-", "\\", "|", "/"],
-  interval: 90,
-  format: "blue"
-});
-const spinner2 = new Spinner({
-  frames: ["◐", "◓", "◑", "◒"],
-  interval: 110,
-  format: "magenta"
-});
+// Moon phases spinner frames
+const moonPhases = ["◐", "◓", "◑", "◒"];
 
-spinner1.start("Task 1: Downloading...");
-spinner2.start("Task 2: Processing...");
+const spinner1 = new Spinner({
+  frames: moonPhases,
+  interval: 100,
+  format: "blue"
+}).start("Task 1: Downloading...");
+
+// Parentheses rotation spinner frames
+const parenthesesRotation = ["(-)", "(\\)", "(|)", "(/)"];
+
+const spinner2 = new Spinner({
+  frames: parenthesesRotation,
+  interval: 120,
+  format: "magenta"
+}).start("Task 2: Processing...");
 
 setTimeout(() => {
-  spinner1.stop("Download complete!");
+  spinner1.stop("Task 1 complete!");
 }, 4000);
 
 setTimeout(() => {
-  spinner2.stop("Processing complete!");
-}, 6000);
+  spinner2.stop("Task 2 complete!");
+}, 5000);
 ```
 
-### Example 4: Fallback in Non-TTY Environments
+### Example 4: Dynamic Update of Spinner Frames
 
-This example shows how the spinner degrades gracefully in non-TTY environments.
+Change the spinner animation frames during runtime.
 
 ```typescript
 import { Spinner } from "nspin-bun";
 
-// Simulate a non-TTY environment (for demonstration)
+// Bouncing ball spinner frames
+const bouncingBall = [
+  "(o    )",
+  "( o   )",
+  "(  o  )",
+  "(   o )",
+  "(    o)",
+  "(   o )",
+  "(  o  )",
+  "( o   )"
+];
+
+// Rotating dot spinner frames
+const rotatingDot = [".", "o", "O", "o"];
+
+const spinner = new Spinner({
+  frames: bouncingBall,
+  interval: 100
+}).start("Task in progress...");
+
+setTimeout(() => {
+  spinner.updateFrames(rotatingDot);
+  spinner.updateText("Now using a different spinner...");
+}, 5000);
+
+setTimeout(() => spinner.stop("Done!"), 10000);
+```
+
+### Example 5: Configuring Spinner Position
+
+Configure the spinner's alignment relative to the text.
+
+```typescript
+import { Spinner } from "nspin-bun";
+
+// Progress bar spinner frames
+const progressBar = [
+  "[    ]",
+  "[=   ]",
+  "[==  ]",
+  "[=== ]",
+  "[====]",
+  "[ ===]",
+  "[  ==]",
+  "[   =]"
+];
+
+// Spinner with left alignment (default)
+const spinnerLeft = new Spinner({
+  frames: progressBar,
+  interval: 100,
+  position: 'left'
+}).start("Left aligned spinner");
+
+// Spinner with right alignment
+const spinnerRight = new Spinner({
+  frames: progressBar,
+  interval: 100,
+  position: 'right'
+}).start("Right aligned spinner");
+
+setTimeout(() => {
+  spinnerLeft.stop("Left spinner done");
+  spinnerRight.stop("Right spinner done");
+}, 8000);
+```
+
+### Example 6: Degraded Output in Non-TTY Environments
+
+Demonstrate graceful degradation when running in non-TTY environments.
+
+```typescript
+import { Spinner } from "nspin-bun";
+
+// Crosshair spinner frames
+const crosshair = ["[+]", "[x]", "[-]", "[x]"];
+
+// Simulate non-TTY mode for demonstration (in practice, determined by process.stdout.isTTY)
 if (!process.stdout.isTTY) {
   console.log("Non-TTY mode active.");
 }
 
 const spinner = new Spinner({
-  frames: ["⠋", "⠙", "⠹", "⠸"],
+  frames: crosshair,
   interval: 100,
   format: "yellow"
-});
+}).start("Running in non-TTY mode...");
 
-spinner.start("Running in non-TTY mode...");
 setTimeout(() => {
   spinner.stop("Finished in non-TTY mode.");
 }, 3000);
@@ -196,9 +287,10 @@ setTimeout(() => {
   Creates a new spinner instance.
 
   **Options:**
-  - `frames`: Array of spinner frames (e.g., `["-", "\\", "|", "/"]`).
-  - `interval` (optional): Time between frames in milliseconds (default: 80).
-  - `format` (optional): Format options for styling the spinner (passed to `styleText`).
+  - `frames`: An array of spinner frames (e.g., `["-", "\\", "|", "/"]`).
+  - `interval` (optional): Time between frames in milliseconds (default is 80).
+  - `format` (optional): Styling options applied via `styleText`.
+  - `position` (optional): Spinner placement relative to the text. Accepts `'left'` (default) or `'right'`.
 
 - **`start(text?: string): this`**
   Starts the spinner with an optional initial message.
@@ -206,8 +298,11 @@ setTimeout(() => {
 - **`updateText(newText: string): this`**
   Updates the spinner's message in real time.
 
+- **`updateFrames(newFrames: string[]): this`**
+  Dynamically updates the spinner frames and resets the frame counter.
+
 - **`stop(finalText?: string): this`**
-  Stops the spinner and displays a final message.
+  Stops the spinner and displays the final message.
 
 For detailed type definitions, please refer to [SpinnerOptions](./docs/SPINNER_OPTIONS.md) and [FormatOptions](./docs/FORMAT_OPTIONS.md).
 
@@ -239,9 +334,14 @@ For detailed type definitions, please refer to [SpinnerOptions](./docs/SPINNER_O
 
 For development, use Bun's fast build and test commands:
 
-- **Build:** `bun build src/index.ts --outdir=dist --minify --target=node`
-- **Test:** `bun test`
-- **Run:** `bun run dist/index.js`
+- **Build:**
+  `bun build src/index.ts --outdir=dist --minify --target=node`
+
+- **Test:**
+  `bun test`
+
+- **Run:**
+  `bun run dist/index.js`
 
 ## Support
 

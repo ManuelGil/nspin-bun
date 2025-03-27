@@ -1,6 +1,6 @@
 {
 	"name": "nspin-bun",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Lightweight and efficient spinner package optimized exclusively for Bun (ESM-only)",
 	"keywords": [
 		"cli",
@@ -59,11 +59,10 @@
 		"test": "bun test",
 		"test:legacy": "vitest run",
 		"start": "bun run dist/index.js",
-		"prepublishOnly": "npm run build:prod && npm run postbuild",
+		"prepublishOnly": "npm run build:prod && cp README.npm.md README.md && npm run postbuild",
 		"publish:local": "npm publish --registry http://localhost:4873",
 		"publish:public": "npm publish --access=public",
 		"prepare": "husky",
-		"release": "release-it",
 		"format": "biome format --write",
 		"lint": "biome lint --write",
 		"lint:check": "biome check --write",
@@ -83,14 +82,11 @@
 		"@biomejs/biome": "1.9.4",
 		"@commitlint/cli": "^19.8.0",
 		"@commitlint/config-conventional": "^19.8.0",
-		"@release-it/conventional-changelog": "^10.0.0",
-		"@release-it/keep-a-changelog": "^6.0.0",
 		"@types/node": "^22.13.10",
 		"bun-types": "^1.2.5",
 		"globals": "^16.0.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^15.4.3",
-		"release-it": "^18.1.2",
 		"typescript": "^5.8.2"
 	},
 	"lint-staged": {
@@ -98,21 +94,5 @@
 			"biome format --write",
 			"biome lint --write"
 		]
-	},
-	"release-it": {
-		"git": {
-			"commitMessage": "chore: :bookmark: release ${version}"
-		},
-		"github": {
-			"release": true
-		},
-		"npm": {
-			"publish": false
-		},
-		"plugins": {
-			"@release-it/keep-a-changelog": {
-				"filename": "CHANGELOG.md"
-			}
-		}
 	}
 }
