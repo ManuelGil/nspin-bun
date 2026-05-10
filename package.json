@@ -82,7 +82,7 @@
 		"pack:check": "bun pm pack",
 		"prepare": "bunx husky",
 		"release": "release-it",
-		"prepublishOnly": "bun run validate && bun run build && cp README.npm.md README.md",
+		"prepublishOnly": "bun run validate && cp README.npm.md README.md",
 		"postpublish": "git checkout -- README.md",
 		"validate": "bun run check && bun run ts-check && bun test && bun run build"
 	},
