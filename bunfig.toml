@@ -1,0 +1,21 @@
+# bunfig.toml
+
+# Disable telemetry for privacy and deterministic CI environments.
+telemetry = false
+
+[install]
+
+# Enforce exact dependency versions during installation.
+# Example:
+# lodash@1.2.3 instead of ^1.2.3
+exact = true
+
+[test]
+
+# Enable test coverage collection for bun test.
+coverage = true
+
+[run]
+
+# Explicitly use Bun shell execution for scripts.
+shell = "bun"

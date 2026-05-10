@@ -13,15 +13,15 @@
  * @see {@link https://nodejs.org/docs/latest/api/util.html#modifiers|Modifiers}
  */
 export type Modifiers =
-  | 'blink'
-  | 'bold'
-  | 'dim'
-  | 'doubleunderline'
-  | 'framed'
-  | 'hidden'
-  | 'inverse'
-  | 'italic'
-  | 'overlined'
-  | 'reset'
-  | 'strikethrough'
-  | 'underline';
+  | "blink"
+  | "bold"
+  | "dim"
+  | "doubleunderline"
+  | "framed"
+  | "hidden"
+  | "inverse"
+  | "italic"
+  | "overlined"
+  | "reset"
+  | "strikethrough"
+  | "underline";

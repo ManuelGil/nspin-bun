@@ -13,21 +13,21 @@
  * @see {@link https://nodejs.org/docs/latest/api/util.html#foreground-colors|Foreground colors}
  */
 export type ForegroundColors =
-  | 'black'
-  | 'blackBright'
-  | 'blue'
-  | 'blueBright'
-  | 'cyan'
-  | 'cyanBright'
-  | 'gray'
-  | 'green'
-  | 'greenBright'
-  | 'grey'
-  | 'magenta'
-  | 'magentaBright'
-  | 'red'
-  | 'redBright'
-  | 'white'
-  | 'whiteBright'
-  | 'yellow'
-  | 'yellowBright';
+  | "black"
+  | "blackBright"
+  | "blue"
+  | "blueBright"
+  | "cyan"
+  | "cyanBright"
+  | "gray"
+  | "green"
+  | "greenBright"
+  | "grey"
+  | "magenta"
+  | "magentaBright"
+  | "red"
+  | "redBright"
+  | "white"
+  | "whiteBright"
+  | "yellow"
+  | "yellowBright";

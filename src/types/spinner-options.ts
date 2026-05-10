@@ -1,4 +1,4 @@
-import type { FormatOptions } from './format-options';
+import type { FormatOptions } from "./format-options";
 
 /**
  * SpinnerOptions: The spinner options.
@@ -62,5 +62,5 @@ export interface SpinnerOptions {
    *
    * @returns {'left' | 'right'} - The position of the spinner in relation to the text
    */
-  position: 'left' | 'right';
+  position: "left" | "right";
 }

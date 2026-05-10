@@ -1,9 +1,9 @@
-import { styleText } from 'node:util';
-import { performance } from 'node:perf_hooks';
+import { performance } from "node:perf_hooks";
+import { styleText } from "node:util";
 
-import { clearLine } from './helpers/console';
-import type { FormatOptions } from './types/format-options';
-import type { SpinnerOptions } from './types/spinner-options';
+import { clearLine } from "./helpers/console";
+import type { FormatOptions } from "./types/format-options";
+import type { SpinnerOptions } from "./types/spinner-options";
 
 /**
  * Spinner: The spinner class.
@@ -100,7 +100,7 @@ export class Spinner {
    *
    * @returns {string} - The text for the spinner animation
    */
-  private text: string = '';
+  private text: string = "";
 
   /**
    * startTime: The start time for the spinner animation.
@@ -126,7 +126,7 @@ export class Spinner {
    *
    * @returns {'left' | 'right'} - The position of the spinner animation
    */
-  private position: 'left' | 'right' = 'left';
+  private position: "left" | "right" = "left";
 
   /**
    * spinnerInstances: The spinner instances.
@@ -164,13 +164,13 @@ export class Spinner {
     frames: string[];
     interval?: number;
     format?: string | string[];
-    position?: 'left' | 'right';
+    position?: "left" | "right";
   }) {
     const {
-      frames = ['-', '\\', '|', '/'],
+      frames = ["-", "\\", "|", "/"],
       interval = 80,
       format,
-      position = 'left',
+      position = "left",
     }: SpinnerOptions = (options as SpinnerOptions) ?? {};
 
     this.frames = frames;
@@ -178,8 +178,8 @@ export class Spinner {
     this.format = format;
 
     // Check if the position is valid
-    if (position !== 'left' && position !== 'right') {
-      this.position = 'left';
+    if (position !== "left" && position !== "right") {
+      this.position = "left";
     } else {
       this.position = position;
     }
@@ -203,7 +203,7 @@ export class Spinner {
    *
    * @returns The Spinner instance for chaining.
    */
-  public start(text: string = ''): this {
+  public start(text: string = ""): this {
     this.text = text;
     this.startTime = performance.now();
 
@@ -211,11 +211,11 @@ export class Spinner {
     Spinner.spinnerInstances.push(this);
 
     // Print a new line to assign its position in the console.
-    process.stdout.write('\n');
+    process.stdout.write("\n");
 
     this.timer = setInterval(() => this.render(), this.interval);
 
-    process.on('exit', this.cleanup);
+    process.on("exit", this.cleanup);
 
     return this;
   }
@@ -270,7 +270,7 @@ export class Spinner {
    *
    * @returns The Spinner instance for chaining.
    */
-  public stop(finalText: string = ''): this {
+  public stop(finalText: string = ""): this {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
@@ -283,15 +283,13 @@ export class Spinner {
       clearLine();
     } else {
       // In non-TTY, simply print the final message with a new line.
-      process.stdout.write(finalText + '\n');
+      process.stdout.write(`${finalText}\n`);
     }
 
     // Remove this instance from the active spinners array.
-    Spinner.spinnerInstances = Spinner.spinnerInstances.filter(
-      (s) => s !== this,
-    );
+    Spinner.spinnerInstances = Spinner.spinnerInstances.filter((s) => s !== this);
 
-    process.off('exit', this.cleanup);
+    process.off("exit", this.cleanup);
 
     return this;
   }
@@ -314,9 +312,9 @@ export class Spinner {
     // For non-TTY environments, output degrades gracefully.
     if (!process.stdout.isTTY) {
       if (finalText !== undefined) {
-        process.stdout.write(finalText + '\n');
+        process.stdout.write(`${finalText}\n`);
       } else {
-        const frame = this.frames[this.currentFrame];
+        const frame = this.frames[this.currentFrame] ?? "";
 
         this.currentFrame = (this.currentFrame + 1) % this.frames.length;
 
@@ -334,15 +332,11 @@ export class Spinner {
     // Cache stdout methods to reduce repeated lookups
     const moveCursor = process.stdout.moveCursor;
 
-    if (typeof moveCursor === 'function') {
-      moveCursor.call(
-        process.stdout,
-        0,
-        -(Spinner.spinnerInstances.length - index),
-      );
+    if (typeof moveCursor === "function") {
+      moveCursor.call(process.stdout, 0, -(Spinner.spinnerInstances.length - index));
     }
 
-    if (typeof process.stdout.cursorTo === 'function') {
+    if (typeof process.stdout.cursorTo === "function") {
       process.stdout.cursorTo(0);
     }
 
@@ -353,7 +347,7 @@ export class Spinner {
     if (finalText !== undefined) {
       output = finalText;
     } else {
-      let frame = this.frames[this.currentFrame];
+      let frame = this.frames[this.currentFrame] ?? "";
 
       this.currentFrame = (this.currentFrame + 1) % this.frames.length;
 
@@ -366,7 +360,7 @@ export class Spinner {
 
       // Modify output based on position: 'right' shows text first, then spinner frame.
       output =
-        this.position === 'right'
+        this.position === "right"
           ? `${this.text} ${frame} (${elapsed}ms)`
           : `${frame} ${this.text} (${elapsed}ms)`;
     }
@@ -374,12 +368,8 @@ export class Spinner {
     process.stdout.write(output);
 
     // Restore the cursor position using the cached method.
-    if (typeof moveCursor === 'function') {
-      moveCursor.call(
-        process.stdout,
-        0,
-        Spinner.spinnerInstances.length - index,
-      );
+    if (typeof moveCursor === "function") {
+      moveCursor.call(process.stdout, 0, Spinner.spinnerInstances.length - index);
     }
   }
 

@@ -11,8 +11,8 @@
  */
 export function clearLine(): void {
   if (
-    typeof process.stdout.clearLine === 'function' &&
-    typeof process.stdout.cursorTo === 'function'
+    typeof process.stdout.clearLine === "function" &&
+    typeof process.stdout.cursorTo === "function"
   ) {
     process.stdout.clearLine(0);
     process.stdout.cursorTo(0);

@@ -14,21 +14,21 @@
  * @see {@link https://nodejs.org/docs/latest/api/util.html#background-colors|Background colors}
  */
 export type BackgroundColors =
-  | 'bgBlack'
-  | 'bgBlackBright'
-  | 'bgBlue'
-  | 'bgBlueBright'
-  | 'bgCyan'
-  | 'bgCyanBright'
-  | 'bgGray'
-  | 'bgGreen'
-  | 'bgGreenBright'
-  | 'bgGrey'
-  | 'bgMagenta'
-  | 'bgMagentaBright'
-  | 'bgRed'
-  | 'bgRedBright'
-  | 'bgWhite'
-  | 'bgWhiteBright'
-  | 'bgYellow'
-  | 'bgYellowBright';
+  | "bgBlack"
+  | "bgBlackBright"
+  | "bgBlue"
+  | "bgBlueBright"
+  | "bgCyan"
+  | "bgCyanBright"
+  | "bgGray"
+  | "bgGreen"
+  | "bgGreenBright"
+  | "bgGrey"
+  | "bgMagenta"
+  | "bgMagentaBright"
+  | "bgRed"
+  | "bgRedBright"
+  | "bgWhite"
+  | "bgWhiteBright"
+  | "bgYellow"
+  | "bgYellowBright";
