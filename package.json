@@ -84,7 +84,7 @@
 		"release": "release-it",
 		"prepublishOnly": "bun run validate && cp README.npm.md README.md",
 		"postpublish": "git checkout -- README.md",
-		"validate": "bun run check && bun run ts-check && bun test && bun run build"
+		"validate": "bun run check && bun run ts-check && bun test && bun run build && bun run check-exports"
 	},
 	"devDependencies": {
 		"@arethetypeswrong/cli": "^0.18.2",

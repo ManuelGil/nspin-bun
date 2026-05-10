@@ -5,19 +5,29 @@ import { Spinner } from "../src/index";
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 test("Spinner - TTY Environment: method chaining and instance management", () => {
-  // Simulate a TTY environment
-  const originalIsTTY = process.stdout.isTTY;
-  process.stdout.isTTY = true;
+  const stdout = process.stdout;
 
-  // Spy on cursor functions if available and return a boolean as expected.
+  // Preserve originals
+  const originalIsTTY = stdout.isTTY;
+  const originalMoveCursor = stdout.moveCursor;
+  const originalCursorTo = stdout.cursorTo;
+  const originalWrite = stdout.write;
+
+  // Simulate TTY safely for CI environments
+  Object.defineProperty(stdout, "isTTY", {
+    value: true,
+    configurable: true,
+  });
+
   let moveCursorCalled = false;
   let cursorToCalled = false;
+  let output = "";
 
-  const originalMoveCursor = process.stdout.moveCursor;
-  const originalCursorTo = process.stdout.cursorTo;
-
-  if (typeof process.stdout.moveCursor === "function") {
-    process.stdout.moveCursor = (_dx: number, _dy: number, callback?: () => void): boolean => {
+  // Mock moveCursor
+  Object.defineProperty(stdout, "moveCursor", {
+    configurable: true,
+    writable: true,
+    value: (_dx: number, _dy: number, callback?: () => void): boolean => {
       moveCursorCalled = true;
 
       if (callback) {
@@ -25,15 +35,14 @@ test("Spinner - TTY Environment: method chaining and instance management", () =>
       }
 
       return true;
-    };
-  }
+    },
+  });
 
-  if (typeof process.stdout.cursorTo === "function") {
-    process.stdout.cursorTo = (
-      _x: number,
-      y?: number | (() => void),
-      callback?: () => void,
-    ): boolean => {
+  // Mock cursorTo
+  Object.defineProperty(stdout, "cursorTo", {
+    configurable: true,
+    writable: true,
+    value: (_x: number, y?: number | (() => void), callback?: () => void): boolean => {
       if (typeof y === "function") {
         callback = y;
       }
@@ -45,21 +54,16 @@ test("Spinner - TTY Environment: method chaining and instance management", () =>
       }
 
       return true;
-    };
-  }
+    },
+  });
 
-  // Spy on process.stdout.write to capture output.
-  let output = "";
-
-  const originalWrite = process.stdout.write;
-
-  process.stdout.write = (chunk: string | Buffer): boolean => {
+  // Mock write
+  stdout.write = ((chunk: string | Buffer): boolean => {
     output += chunk.toString();
 
     return true;
-  };
+  }) as typeof stdout.write;
 
-  // Create and use the spinner.
   const spinner = new Spinner({
     frames: ["-", "\\", "|", "/"],
     interval: 10,
@@ -72,35 +76,47 @@ test("Spinner - TTY Environment: method chaining and instance management", () =>
   expect(moveCursorCalled).toBe(true);
   expect(cursorToCalled).toBe(true);
 
-  // Restore original functions.
-  process.stdout.write = originalWrite;
+  // Restore originals
+  stdout.write = originalWrite;
 
-  if (typeof originalMoveCursor === "function") {
-    process.stdout.moveCursor = originalMoveCursor;
-  }
+  Object.defineProperty(stdout, "isTTY", {
+    value: originalIsTTY,
+    configurable: true,
+  });
 
-  if (typeof originalCursorTo === "function") {
-    process.stdout.cursorTo = originalCursorTo;
-  }
+  Object.defineProperty(stdout, "moveCursor", {
+    value: originalMoveCursor,
+    configurable: true,
+    writable: true,
+  });
 
-  process.stdout.isTTY = originalIsTTY;
+  Object.defineProperty(stdout, "cursorTo", {
+    value: originalCursorTo,
+    configurable: true,
+    writable: true,
+  });
 });
 
 test("Spinner - Non-TTY Environment: final message output", async () => {
-  // Simulate a non-TTY environment
-  const originalIsTTY = process.stdout.isTTY;
+  const stdout = process.stdout;
 
-  process.stdout.isTTY = false;
+  // Preserve originals
+  const originalIsTTY = stdout.isTTY;
+  const originalWrite = stdout.write;
+
+  // Simulate non-TTY safely
+  Object.defineProperty(stdout, "isTTY", {
+    value: false,
+    configurable: true,
+  });
 
   let output = "";
 
-  const originalWrite = process.stdout.write;
-
-  process.stdout.write = (chunk: string | Buffer): boolean => {
+  stdout.write = ((chunk: string | Buffer): boolean => {
     output += chunk.toString();
 
     return true;
-  };
+  }) as typeof stdout.write;
 
   const spinner = new Spinner({
     frames: ["-", "\\", "|", "/"],
@@ -117,7 +133,11 @@ test("Spinner - Non-TTY Environment: final message output", async () => {
 
   expect(output).toContain("Final Non-TTY");
 
-  // Restore original functions.
-  process.stdout.write = originalWrite;
-  process.stdout.isTTY = originalIsTTY;
+  // Restore originals
+  stdout.write = originalWrite;
+
+  Object.defineProperty(stdout, "isTTY", {
+    value: originalIsTTY,
+    configurable: true,
+  });
 });
