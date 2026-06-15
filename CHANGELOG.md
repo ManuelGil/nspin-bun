@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-06-15
+
+### Changed
+
+- Update development dependencies to latest compatible versions.
+- Update release automation tooling.
+- Refresh lockfile and dependency resolutions.
+- Update Node.js engine requirements.
+
+### Fixed
+
+- Resolve security advisories reported by dependency audit.
+- Update transitive dependencies affected by Undici vulnerabilities.
+
 ## [1.2.0] - 2026-05-10
 
 ### Added
@@ -47,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release of the nspin-bun package.
 
-[Unreleased]: https://github.com/ManuelGil/nspin-bun/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/ManuelGil/nspin-bun/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/ManuelGil/nspin-bun/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/ManuelGil/nspin-bun/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/ManuelGil/nspin-bun/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ManuelGil/nspin-bun/releases/tag/v1.0.0
