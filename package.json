@@ -1,6 +1,6 @@
 {
 	"name": "nspin-bun",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Fast and lightweight ESM spinner package optimized for Bun and modern Node.js runtimes",
 	"keywords": [
 		"bun",
